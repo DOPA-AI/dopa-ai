@@ -237,3 +237,27 @@ function startSpeech() {
 
   recognition.start();
 }
+
+
+// Dynamic AI Activation Handler
+function activateSystemKey() {
+    const inputKey = document.getElementById("groq-user-key").value.trim();
+    
+    if (inputKey.startsWith("gsk_")) {
+        localStorage.setItem("groq_api_key", inputKey);
+        alert("🎉 System Active! DOPA AI features are now successfully unlocked on your browser.");
+        location.reload(); 
+    } else {
+        alert("⚠️ Invalid Token! Please ensure you paste a valid Groq API Key starting with 'gsk_'.");
+    }
+}
+
+// Auto-hide panel if system is already active on this specific machine
+document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("groq_api_key")) {
+        const panel = document.getElementById("ai-activation-panel");
+        if (panel) {
+            panel.innerHTML = `<div style="background: #118833; color: #fff; padding: 8px; text-align: center; font-size: 14px; font-family: sans-serif;">🛡️ DOPA AI Engine: Connected and Secured via LocalStorage Cache</div>`;
+        }
+    }
+});
