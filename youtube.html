@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOPA AI - YouTube Study</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="bg-ball ball-1"></div>
+  <div class="bg-ball ball-2"></div>
+  <div class="bg-ball ball-3"></div>
+
+  <nav class="navbar">
+    <div class="logo">DOPA <span>AI</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="doubt.html">Doubt Solver</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="planner.html">Study Planner</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="youtube.html" class="nav-active">YouTube Study</a></li>
+      
+      <li class="profile-container" id="userProfileComponent" style="display: none;">
+        <div class="profile-avatar" onclick="toggleProfileDropdown(event)">
+          <span id="userInitial">U</span>
+        </div>
+        <div class="profile-dropdown" id="profileDropdown">
+          <div class="dropdown-header">
+            <p class="user-display-name" id="dropdownName">Student Name</p>
+            <p class="user-display-email" id="dropdownEmail">student@dopaai.com</p>
+          </div>
+          <hr class="dropdown-divider">
+          <a href="#" class="logout-btn" onclick="handleLogout(event)">
+            <span>🚪</span> Log Out
+          </a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <section class="tool-page">
+    <div class="tool-header">
+      <h1>🎬 YouTube Study Tool</h1>
+      <p>Paste a YouTube URL — get Notes, Quiz and Assignment instantly in English.</p>
+    </div>
+
+    <div class="yt-input-box">
+      <div class="yt-url-row">
+        <span class="yt-icon">▶️</span>
+        <input type="text" id="ytURL"
+          placeholder="Paste YouTube URL here... e.g. https://youtube.com/watch?v=..."
+          oninput="handleURLInput(this.value)" />
+      </div>
+      <div id="autoFillMsg"></div>
+      <button class="btn" onclick="generateContent()">🚀 Generate Study Content</button>
+    </div>
+
+    <div id="videoPreview" class="video-preview" style="display:none">
+      <iframe id="videoFrame" src="" allowfullscreen></iframe>
+    </div>
+
+    <div class="yt-tabs" id="ytTabs" style="display:none">
+      <button class="yt-tab active" onclick="switchTab('notes', this)">📝 Notes</button>
+      <button class="yt-tab" onclick="switchTab('quiz', this)">❓ Quiz</button>
+      <button class="yt-tab" onclick="switchTab('assignment', this)">📋 Assignment</button>
+    </div>
+
+    <div id="notesContent" class="tab-content answer-box" style="display:none"></div>
+    <div id="quizContent" class="tab-content answer-box" style="display:none"></div>
+    <div id="assignmentContent" class="tab-content answer-box" style="display:none"></div>
+
+  </section>
+
+  <footer>
+    <p>DOPA AI — Built for Students, Powered by AI 🚀</p>
+  </footer>
+
+  <script src="youtube.js"></script>
+
+  <script>
+    // SECURITY GUARD ROUTER: Kick out unauthenticated visitors right away
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "auth.html";
+    }
+
+    // Initialize layout setup modules as soon as document assets resolve
+    document.addEventListener("DOMContentLoaded", () => {
+      initNavbarProfile();
+    });
+
+    // Extract logged account descriptors out of local cache database
+    function initNavbarProfile() {
+      const profileComponent = document.getElementById("userProfileComponent");
+      if (profileComponent) {
+        profileComponent.style.display = "inline-block";
+
+        let activeEmail = "";
+        let activeName = "Student";
+
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith("user_")) {
+            activeEmail = key.replace("user_", "");
+            const rawData = localStorage.getItem(key);
+            if (rawData) {
+              try {
+                const parsed = JSON.parse(rawData);
+                activeName = parsed.name || "Student";
+              } catch (e) {
+                console.error("Failed parsing metadata profile mapping array structural block: ", e);
+              }
+            }
+            break;
+          }
+        }
+
+        const initialText = document.getElementById("userInitial");
+        const nameLabel = document.getElementById("dropdownName");
+        const emailLabel = document.getElementById("dropdownEmail");
+
+        if (initialText) initialText.innerText = activeName.charAt(0);
+        if (nameLabel) nameLabel.innerText = activeName;
+        if (emailLabel) emailLabel.innerText = activeEmail || "student@dopaai.com";
+      }
+    }
+
+    // Handle dropdown tracking visibility layer triggers
+    function toggleProfileDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById("profileDropdown");
+      if (dropdown) dropdown.classList.toggle("show");
+    }
+
+    window.addEventListener("click", () => {
+      const dropdown = document.getElementById("profileDropdown");
+      if (dropdown && dropdown.classList.contains("show")) {
+        dropdown.classList.remove("show");
+      }
+    });
+
+    // Clear runtime authentication cookies flags and boot browser window back to index paths
+    function handleLogout(event) {
+      event.preventDefault();
+      const userConfirm = confirm("Are you sure you want to log out of DOPA AI?");
+      if (userConfirm) {
+        localStorage.removeItem("isLoggedIn");
+        window.location.href = "index.html";
+      }
+    }
+  </script>
+
+</body>
+</html>

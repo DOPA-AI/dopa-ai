@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOPA AI - Resource Finder</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">DOPA <span>AI</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="doubt.html">Doubt Solver</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="planner.html">Study Planner</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="youtube.html">YouTube Study</a></li>
+    </ul>
+  </nav>
+
+  <section class="tool-page">
+    <div class="tool-header">
+      <h1>📚 Resource Finder</h1>
+      <p>Get the best YouTube videos and courses for any topic instantly.</p>
+    </div>
+
+    <div class="tool-box">
+      <input type="text" id="resourceInput"
+        placeholder="Enter topic... e.g. Quadratic Equations" />
+      <button class="btn" onclick="findResources()">Find Resources</button>
+    </div>
+
+    <div class="answer-box" id="resourceBox">
+      <h3>Recommended Resources:</h3>
+      <div id="resourceContent">
+        <p style="color: #ADB5BD">Your resources will appear here...</p>
+      </div>
+    </div>
+
+  </section>
+
+  <footer>
+    <p>DOPA AI — Built for Students, Powered by AI 🚀</p>
+  </footer>
+
+  <script src="resources.js"></script>
+</body>
+</html>

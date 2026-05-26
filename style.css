@@ -1,0 +1,1715 @@
+/* ==========================================================================
+   SECTION 1: GLOBAL BASE STYLES & LAYOUT ANIMATIONS
+   Target Files: All HTML Files (index, doubt, quiz, planner, resources, youtube, auth)
+   Target Scripts: Global Ecosystem Initialization
+   ========================================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  color: #E9ECEF;
+  overflow-x: hidden;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  
+  /* FIXED: Combined base colors into a high-performance 4-way linear gradient */
+  background: linear-gradient(-45deg, #0D1B2A, #150E28, #0B1536, #1B0A2E);
+  background-size: 400% 400%;
+  animation: moveGradient 20s ease infinite;
+}
+
+/* FIXED: Smooth global layout hardware acceleration keyframes */
+@keyframes moveGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+/* ==========================================================================
+   SECTION 2: SHARED NAVBAR UI COMPONENT
+   Target Files: All HTML Files (Universal Navigation Layout)
+   Target Scripts: auth.js (Profile Mapping Controls)
+   ========================================================================== */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 60px;
+  /* FIXED: Adjusted opacity down slightly to let background colors blend cleanly */
+  background-color: rgba(13, 27, 42, 0.75);
+  border-bottom: 1px solid #1e2d3d;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 2px;
+}
+
+.logo span {
+  color: #C77DFF;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  color: #ADB5BD;
+  text-decoration: none;
+  font-size: 15px;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #C77DFF;
+}
+
+.nav-active {
+  color: #C77DFF !important;
+  font-weight: 700;
+}
+
+
+/* ==========================================================================
+   SECTION 3: LANDING PAGE HERO STYLING (WITH PREMIUM BACKGROUND WATERMARK)
+   Target Files: index.html (Main Workspace Gateway)
+   Target Scripts: Landing Animations Controller
+   ========================================================================== */
+
+.hero {
+  text-align: center;
+  padding: 100px 20px 90px;
+  position: relative;
+  overflow: hidden;
+  background: transparent; /* FIXED: Overrides any native structural defaults */
+  z-index: 1; /* Establishes a localized stacking index for children */
+}
+
+/* ADDED: Massive Premium Background Watermark Text */
+.hero::before {
+  content: "DOPA";
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  /* Responsive typography scaling to perfectly fit small phones up to wide monitors */
+  font-size: clamp(12rem, 25vw, 24rem); 
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  
+  /* Semi-transparent tint to embed purely as an environmental element */
+  color: rgba(255, 255, 255, 0.035); 
+  
+  /* Adds ambient cyber-glow directly behind the large watermark characters */
+  text-shadow: 0 0 80px rgba(123, 47, 190, 0.15);
+  
+  /* CRITICAL ISOLATION GUARDS */
+  z-index: -1;          /* Pinpoint-locks it securely BEHIND foreground components */
+  pointer-events: none; /* Allows direct pointer clicking right through the layer */
+  user-select: none;    /* Disables highlighted selection rings during drag gestures */
+}
+
+/* FIXED: Explicitly layered foreground elements to rest safely over the watermark */
+.hero-badge,
+.hero h1,
+.hero p,
+.hero-buttons,
+.hero-stats {
+  position: relative;
+  z-index: 2; /* Securely overrides watermark stack level (-1) */
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(123, 47, 190, 0.25);
+  border: 1px solid #7B2FBE;
+  color: #C77DFF;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+
+.hero h1 {
+  font-size: 62px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  text-shadow: 0 0 40px rgba(199, 125, 255, 0.2);
+}
+
+.hero h1 span {
+  color: #C77DFF;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #ADB5BD;
+  margin-bottom: 36px;
+  line-height: 1.7;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 48px;
+}
+
+
+/* ==========================================================================
+   SECTION 4: CORE BUTTON UI COMPONENTS
+   Target Files: All Front-Facing HTML Dynamic Views
+   Target Scripts: Form Submissions, Workspace Actions, State Toggles
+   ========================================================================== */
+
+.btn {
+  background: linear-gradient(135deg, #7B2FBE, #9D4EDD);
+  color: #fff;
+  padding: 14px 36px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(123, 47, 190, 0.4);
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(157, 78, 221, 0.6);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #C77DFF;
+  padding: 14px 36px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  border: 1px solid #7B2FBE;
+  transition: all 0.3s;
+}
+
+.btn-outline:hover {
+  background: rgba(123, 47, 190, 0.15);
+  transform: translateY(-2px);
+}
+
+.btn-small {
+  background: rgba(123, 47, 190, 0.2);
+  color: #C77DFF;
+  padding: 8px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(123, 47, 190, 0.4);
+  transition: all 0.3s;
+}
+
+.btn-small:hover {
+  background: rgba(123, 47, 190, 0.4);
+  transform: translateX(4px);
+}
+
+
+/* ==========================================================================
+   SECTION 5: BACKGROUND GLOW MATRIX & HERO STATISTICS
+   Target Files: index.html (Landing Metrics Framework)
+   Target Scripts: Environmental Theme Engines
+   ========================================================================== */
+
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+}
+
+.stat {
+  font-size: 14px;
+  color: #ADB5BD;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1px solid #1e2d3d;
+}
+
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: -1;
+}
+
+.glow-1 {
+  width: 400px;
+  height: 400px;
+  background: rgba(123, 47, 190, 0.15);
+  top: -100px;
+  right: -100px;
+}
+
+.glow-2 {
+  width: 300px;
+  height: 300px;
+  background: rgba(157, 78, 221, 0.1);
+  bottom: -50px;
+  left: -50px;
+}
+
+
+/* ==========================================================================
+   SECTION 6: FEATURE INDEX SHOWCASE & TRADITIONAL GRIDS
+   Target Files: index.html (Application Toolkit Display Menu)
+   Target Scripts: Navigation Routing Anchors
+   ========================================================================== */
+
+.features {
+  padding: 70px 60px;
+  text-align: center;
+  background: transparent;
+}
+
+.features-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7B2FBE;
+  letter-spacing: 4px;
+  margin-bottom: 12px;
+}
+
+.features h2 {
+  font-size: 36px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.features-sub {
+  font-size: 15px;
+  color: #ADB5BD;
+  margin-bottom: 48px;
+}
+
+.cards {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  /* FIXED: Adjusted gradient alpha values to show underlying animation flow */
+  background: linear-gradient(145deg, rgba(22, 33, 62, 0.75), rgba(15, 26, 46, 0.85));
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(123, 47, 190, 0.4);
+  border-radius: 16px;
+  padding: 32px 24px;
+  width: 230px;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  border-color: #9D4EDD;
+  box-shadow: 0 8px 30px rgba(123, 47, 190, 0.3);
+}
+
+.icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #C77DFF;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 13px;
+  color: #ADB5BD;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+
+/* ==========================================================================
+   SECTION 7: VALUE PROPOSITION (WHY CHOOSE SECTION)
+   Target Files: index.html (Product Competitive Analysis Blocks)
+   Target Scripts: UI Layout Performance Loops
+   ========================================================================== */
+
+.why-section {
+  padding: 70px 60px;
+  text-align: center;
+  /* FIXED: Translucent overlay background block instead of solid gray tints */
+  background: rgba(255, 255, 255, 0.01);
+  border-top: 1px solid #1e2d3d;
+  border-bottom: 1px solid #1e2d3d;
+}
+
+.why-section h2 {
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 40px;
+}
+
+.why-cards {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.why-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #1e2d3d;
+  border-radius: 12px;
+  padding: 28px 24px;
+  width: 210px;
+  transition: all 0.3s;
+}
+
+.why-card:hover {
+  border-color: #7B2FBE;
+  background: rgba(123, 47, 190, 0.08);
+}
+
+.why-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.why-card h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.why-card p {
+  font-size: 13px;
+  color: #ADB5BD;
+  line-height: 1.6;
+}
+
+
+/* ==========================================================================
+   SECTION 8: UNIVERSAL UTILITY FOOTER COMPONENT
+   Target Files: All Front-Facing Workspace HTML Frameworks
+   Target Scripts: Footer Copyright Calculations Engine
+   ========================================================================== */
+
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  color: #ADB5BD;
+  font-size: 13px;
+  background: transparent;
+}
+
+.footer-logo {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.footer-logo span {
+  color: #C77DFF;
+}
+
+.footer-sub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #4a5568;
+}
+
+
+/* ==========================================================================
+   SECTION 9: SYSTEM WORKSPACE TOOL CONTROLLERS (TEXTAREAS & INPUTS)
+   Target Files: doubt.html, quiz.html, planner.html, youtube.html
+   Target Scripts: Processing Parameter Ingestion Loops
+   ========================================================================== */
+
+.tool-page {
+  max-width: 750px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.tool-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.tool-header h1 {
+  font-size: 38px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.tool-header p {
+  font-size: 16px;
+  color: #ADB5BD;
+}
+
+.tool-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+textarea {
+  width: 100%;
+  height: 140px;
+  background-color: rgba(22, 33, 62, 0.85);
+  border: 1px solid #7B2FBE;
+  border-radius: 10px;
+  padding: 16px;
+  color: #fff;
+  font-size: 15px;
+  resize: none;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #C77DFF;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"] {
+  width: 100%;
+  background-color: rgba(22, 33, 62, 0.85);
+  border: 1px solid #7B2FBE;
+  border-radius: 10px;
+  padding: 16px;
+  color: #fff;
+  font-size: 15px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus {
+  outline: none;
+  border-color: #C77DFF;
+}
+
+.answer-box {
+  margin-top: 30px;
+  background: linear-gradient(145deg, rgba(22, 33, 62, 0.8), rgba(15, 26, 46, 0.9));
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(123, 47, 190, 0.4);
+  border-radius: 12px;
+  padding: 28px;
+  line-height: 1.8;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.answer-box h3 {
+  color: #C77DFF;
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.answer-box p {
+  color: #E9ECEF;
+  font-size: 15px;
+  white-space: pre-wrap;
+}
+
+
+/* ==========================================================================
+   SECTION 10: INTERACTIVE MULTIPLE CHOICE QUIZ ARCHITECTURE
+   Target Files: quiz.html (Dynamic Exam Simulator)
+   Target Scripts: quiz.js (Real-time Options Selection and Verification Engines)
+   ========================================================================== */
+
+.topic-heading {
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #7B2FBE;
+}
+
+.question-block {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1e2d3d;
+}
+
+.question-block h4 {
+  color: #C77DFF;
+  font-size: 15px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.option {
+  background-color: rgba(13, 27, 42, 0.6);
+  border: 1px solid #1e2d3d;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #E9ECEF;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option:hover {
+  border-color: #7B2FBE;
+  color: #C77DFF;
+}
+
+.correct {
+  border-color: #28a745 !important;
+  color: #28a745 !important;
+}
+
+.wrong {
+  border-color: #dc3545 !important;
+  color: #dc3545 !important;
+}
+
+
+/* ==========================================================================
+   SECTION 11: SYSTEM ACADEMIC STUDY PLANNER TEMPLATES
+   Target Files: planner.html (AI Automated Scheduler System)
+   Target Scripts: planner.js (Syllabus Array Block Parsers)
+   ========================================================================== */
+
+.plan-subject-heading {
+  font-size: 32px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 8px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #7B2FBE;
+}
+
+.plan-meta {
+  font-size: 13px;
+  color: #ADB5BD;
+  margin-bottom: 20px;
+}
+
+.plan-divider {
+  height: 1px;
+  background-color: #1e2d3d;
+  margin-bottom: 24px;
+}
+
+.day-block {
+  background: linear-gradient(145deg, rgba(15, 26, 46, 0.8), rgba(13, 27, 42, 0.8));
+  border: 1px solid #1e2d3d;
+  border-left: 4px solid #7B2FBE;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  transition: all 0.2s;
+}
+
+.day-block:hover {
+  border-left-color: #C77DFF;
+  box-shadow: 0 4px 15px rgba(123, 47, 190, 0.2);
+}
+
+.day-block-heading {
+  font-size: 18px;
+  font-weight: 800;
+  color: #C77DFF;
+  margin-bottom: 10px;
+}
+
+.day-topic {
+  font-size: 15px;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.day-time {
+  font-size: 13px;
+  color: #ADB5BD;
+  margin-bottom: 6px;
+}
+
+.day-content {
+  font-size: 13px;
+  color: #E9ECEF;
+  line-height: 1.6;
+}
+
+
+/* ==========================================================================
+   SECTION 12: CORE AI DOUBT SOLVER WRAPPERS
+   Target Files: doubt.html (Real-time Explanation Console)
+   Target Scripts: doubt.js (Groq Context Ingestion Pipeline)
+   ========================================================================== */
+
+.sub-question {
+  font-size: 22px;
+  font-weight: 800;
+  color: #C77DFF;
+  margin-top: 24px;
+  margin-bottom: 4px;
+}
+
+.point-heading {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 10px;
+  margin-bottom: 2px;
+}
+
+.answer-content {
+  font-size: 14px;
+  color: #E9ECEF;
+  line-height: 1.7;
+  margin-top: 4px;
+}
+
+.answer-para {
+  font-size: 14px;
+  color: #E9ECEF;
+  line-height: 1.7;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+
+/* ==========================================================================
+   SECTION 13: RESOURCE DIRECTORY & CURATED LINKS CARDS
+   Target Files: resources.html (Academic Materials Catalog)
+   Target Scripts: Static Link Routers
+   ========================================================================== */
+
+.resource-section {
+  margin-bottom: 28px;
+}
+
+.resource-section-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #C77DFF;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1e2d3d;
+}
+
+.youtube-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(145deg, rgba(15, 26, 46, 0.8), rgba(13, 27, 42, 0.8));
+  border: 1px solid #1e2d3d;
+  border-left: 4px solid #ff0000;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+
+.youtube-card:hover {
+  border-left-color: #ff4444;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.15);
+}
+
+.youtube-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.youtube-channel {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.youtube-title {
+  font-size: 12px;
+  color: #ADB5BD;
+}
+
+.youtube-btn {
+  background: #ff0000;
+  color: white;
+  padding: 7px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.youtube-btn:hover {
+  background: #cc0000;
+  transform: scale(1.05);
+}
+
+.website-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(145deg, rgba(15, 26, 46, 0.8), rgba(13, 27, 42, 0.8));
+  border: 1px solid #1e2d3d;
+  border-left: 4px solid #7B2FBE;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+
+.website-card:hover {
+  border-left-color: #C77DFF;
+  box-shadow: 0 4px 15px rgba(123, 47, 190, 0.2);
+}
+
+.website-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.website-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.website-desc {
+  font-size: 12px;
+  color: #ADB5BD;
+}
+
+.website-btn {
+  background: #7B2FBE;
+  color: white;
+  padding: 7px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.website-btn:hover {
+  background: #9D4EDD;
+  transform: scale(1.05);
+}
+
+.tip-card {
+  background: rgba(123, 47, 190, 0.1);
+  border: 1px solid rgba(123, 47, 190, 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #E9ECEF;
+  line-height: 1.6;
+}
+
+.plan-text {
+  color: #E9ECEF;
+  font-size: 15px;
+  line-height: 2;
+}
+
+
+/* ==========================================================================
+   SECTION 14: MIC INTEGRATION & HARDWARE CAPTURE SIGNALS
+   Target Files: doubt.html (Voice-to-Text Command Field)
+   Target Scripts: doubt.js (Browser WebSpeech Audio Pipeline API)
+   ========================================================================== */
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-wrapper textarea {
+  width: 100%;
+  padding-right: 60px;
+}
+
+.mic-btn {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  background: rgba(123, 47, 190, 0.3);
+  border: 1px solid #7B2FBE;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: white;
+}
+
+.mic-btn:hover {
+  background: rgba(123, 47, 190, 0.6);
+  transform: scale(1.1);
+}
+
+.mic-active {
+  background: rgba(220, 53, 69, 0.4) !important;
+  border-color: #dc3545 !important;
+  animation: micPulse 1s infinite;
+}
+
+@keyframes micPulse {
+  0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+}
+
+.mic-listening {
+  color: #C77DFF;
+  font-size: 13px;
+  margin-top: 8px;
+  text-align: center;
+  animation: pulse 1s infinite;
+}
+
+.mic-done {
+  color: #28a745;
+  font-size: 13px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.mic-error {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+
+/* ==========================================================================
+   SECTION 15: FILE UPLOADER & GRAPHICS INPUT CHANNELS
+   Target Files: doubt.html (Vision Processing System)
+   Target Scripts: doubt.js (Image Render FileReader Streams)
+   ========================================================================== */
+
+.upload-section {
+  width: 100%;
+}
+
+.upload-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(22, 33, 62, 0.85);
+  border: 2px dashed #7B2FBE;
+  border-radius: 10px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #ADB5BD;
+  font-size: 14px;
+}
+
+.upload-label:hover {
+  border-color: #C77DFF;
+  background: rgba(123, 47, 190, 0.1);
+  color: #C77DFF;
+}
+
+.upload-icon {
+  font-size: 24px;
+}
+
+#imagePreview {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(22, 33, 62, 0.85);
+  border: 1px solid #28a745;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+#previewImg {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #7B2FBE;
+}
+
+.remove-btn {
+  background: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: auto;
+}
+
+.remove-btn:hover {
+  background: rgba(220, 53, 69, 0.4);
+}
+
+
+/* ==========================================================================
+   SECTION 16: ADVANCED YOUTUBE TRANSCRIPT PARSING WORKSPACE
+   Target Files: youtube.html (Media Parsing Hub)
+   Target Scripts: youtube.js (Completions Splitter Array Framework)
+   ========================================================================== */
+
+.yt-input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.yt-url-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(22, 33, 62, 0.85);
+  border: 1px solid #7B2FBE;
+  border-radius: 10px;
+  padding: 4px 16px 4px 4px;
+}
+
+.yt-icon {
+  font-size: 24px;
+  padding: 8px;
+}
+
+.yt-url-row input {
+  border: none;
+  background: transparent;
+  flex: 1;
+  padding: 12px 0;
+}
+
+.yt-url-row input:focus {
+  outline: none;
+}
+
+.video-preview {
+  margin-bottom: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #7B2FBE;
+  box-shadow: 0 4px 20px rgba(123, 47, 190, 0.3);
+}
+
+.video-preview iframe {
+  width: 100%;
+  height: 380px;
+  display: block;
+}
+
+.yt-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #1e2d3d;
+  padding-bottom: 0;
+}
+
+.yt-tab {
+  background: transparent;
+  color: #ADB5BD;
+  border: none;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.yt-tab:hover {
+  color: #C77DFF;
+}
+
+.yt-tab.active {
+  color: #C77DFF;
+  border-bottom: 3px solid #7B2FBE;
+}
+
+.tab-content {
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+}
+
+.notes-section {
+  font-size: 18px;
+  font-weight: 800;
+  color: #C77DFF;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #1e2d3d;
+}
+
+.notes-point {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.notes-term {
+  font-size: 14px;
+  color: #E9ECEF;
+  background: rgba(123, 47, 190, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.notes-content {
+  font-size: 14px;
+  color: #ADB5BD;
+  line-height: 1.7;
+  margin-bottom: 6px;
+}
+
+.assignment-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.assignment-section {
+  font-size: 17px;
+  font-weight: 700;
+  color: #C77DFF;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background: rgba(123, 47, 190, 0.1);
+  border-radius: 6px;
+}
+
+.assignment-question {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+  padding-left: 12px;
+  border-left: 3px solid #7B2FBE;
+}
+
+.assignment-content {
+  font-size: 14px;
+  color: #ADB5BD;
+  line-height: 1.7;
+  margin-bottom: 6px;
+}
+
+.yt-question {
+  font-size: 15px;
+  font-weight: 600;
+  color: #C77DFF;
+  margin-bottom: 12px;
+}
+
+.autofill-success {
+  color: #28a745;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.autofill-loading {
+  color: #C77DFF;
+  font-size: 13px;
+  margin-top: 6px;
+  animation: pulse 1s infinite;
+}
+
+
+/* ==========================================================================
+   SECTION 17: SCORE ANALYSIS PANEL COMPONENTS (ACCURACY ENGINE)
+   Target Files: quiz.html, youtube.html
+   Target Scripts: quiz.js, youtube.js (Scoring Analytics Compilers)
+   ========================================================================== */
+
+.accuracy-box {
+  margin-top: 30px;
+  background: linear-gradient(145deg, rgba(22, 33, 62, 0.8), rgba(15, 26, 46, 0.9));
+  border: 1px solid #7B2FBE;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.accuracy-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.accuracy-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 20px;
+}
+
+.accuracy-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.accuracy-num {
+  font-size: 36px;
+  font-weight: 900;
+  color: #C77DFF;
+}
+
+.accuracy-label {
+  font-size: 12px;
+  color: #ADB5BD;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.accuracy-bar {
+  width: 100%;
+  height: 10px;
+  background: #1e2d3d;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.accuracy-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  background: #28a745;
+}
+
+.accuracy-msg {
+  font-size: 15px;
+  color: #E9ECEF;
+  font-weight: 600;
+}
+
+
+/* ==========================================================================
+   SECTION 18: AUTOMATED SYLLABUS STEPPERS (SMART PLANNER GENERATOR)
+   Target Files: planner.html (Curriculum Setup Configuration Dashboard)
+   Target Scripts: planner.js (Progressive Target Matrix Ingestors)
+   ========================================================================== */
+
+.planner-step {
+  margin-bottom: 32px;
+  background: linear-gradient(145deg, rgba(22, 33, 62, 0.8), rgba(15, 26, 46, 0.9));
+  border: 1px solid rgba(123, 47, 190, 0.4);
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.step-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7B2FBE;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+
+.step-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.step-sub {
+  font-size: 13px;
+  color: #ADB5BD;
+  margin-bottom: 16px;
+  margin-top: -12px;
+}
+
+.input-label {
+  font-size: 13px;
+  color: #ADB5BD;
+  font-weight: 600;
+  margin-bottom: -8px;
+}
+
+.course-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.course-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: rgba(13, 27, 42, 0.6);
+  border: 1px solid #1e2d3d;
+  border-radius: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 80px;
+}
+
+.course-card:hover {
+  border-color: #7B2FBE;
+  background: rgba(123, 47, 190, 0.1);
+}
+
+.course-card.selected {
+  border-color: #C77DFF;
+  background: rgba(123, 47, 190, 0.25);
+  box-shadow: 0 0 15px rgba(123, 47, 190, 0.3);
+}
+
+.course-icon {
+  font-size: 28px;
+}
+
+.course-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #E9ECEF;
+}
+
+.topics-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.topic-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13, 27, 42, 0.6);
+  border: 1px solid #1e2d3d;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  color: #E9ECEF;
+}
+
+.topic-chip:hover {
+  border-color: #7B2FBE;
+  color: #C77DFF;
+}
+
+.topic-chip.topic-selected {
+  border-color: #C77DFF;
+  background: rgba(123, 47, 190, 0.2);
+  color: #C77DFF;
+}
+
+.topic-check {
+  font-size: 16px;
+  color: #7B2FBE;
+}
+
+.topic-text {
+  font-size: 13px;
+}
+
+.topics-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-outline-small {
+  background: transparent;
+  color: #C77DFF;
+  border: 1px solid #7B2FBE;
+  border-radius: 6px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.btn-outline-small:hover {
+  background: rgba(123, 47, 190, 0.15);
+}
+
+
+/* ==========================================================================
+   SECTION 19: DOCUMENT HANDLING GRAPHICS (PDF INTEGRATION MODULES)
+   Target Files: planner.html (Exportable Document Previews)
+   Target Scripts: planner.js (jsPDF Buffer Mapping Modules)
+   ========================================================================== */
+
+#pdfPreview {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(22, 33, 62, 0.85);
+  border: 1px solid #28a745;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.pdf-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.pdf-icon {
+  font-size: 28px;
+}
+
+#pdfName {
+  font-size: 14px;
+  color: #E9ECEF;
+  font-weight: 600;
+}
+
+
+/* ==========================================================================
+   SECTION 20: NAVIGATION MENU ACCOUNT EXPANSION (GLASSMORPHIC PROFILE DROPDOWN)
+   Target Files: All HTML Framework Navigation Links Bars Elements
+   Target Scripts: auth.js, Global Initialization Core Script Blocks
+   ========================================================================== */
+
+.profile-container {
+  position: relative;
+  display: inline-block;
+  list-style: none;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #7B2FBE, #C77DFF);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(199, 125, 255, 0.4);
+  transition: transform 0.2s;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+}
+
+#userInitial {
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  background: linear-gradient(145deg, #16213E, #0f1a2e);
+  border: 1px solid rgba(123, 47, 190, 0.5);
+  border-radius: 12px;
+  width: 220px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  display: none; /* Controlled via JS toggles */
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.profile-dropdown.show {
+  display: flex;
+}
+
+.dropdown-header {
+  margin-bottom: 12px;
+}
+
+.user-display-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff !important;
+  line-height: 1.3;
+}
+
+.user-display-email {
+  font-size: 12px;
+  color: #ADB5BD !important;
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+.dropdown-divider {
+  border: 0;
+  height: 1px;
+  background: #1e2d3d;
+  margin: 4px 0 12px 0;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #dc3545 !important;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px 0;
+  transition: opacity 0.2s;
+}
+
+.logout-btn:hover {
+  opacity: 0.8;
+}
+
+
+/* ==========================================================================
+   SECTION 21: SECURITY INTERACTION EXTENSIONS & DIALOG FORMS
+   Target Files: auth.html (Identity Portal View)
+   Target Scripts: auth.js (Encryption Verification Loops)
+   ========================================================================== */
+
+.show-password-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: absolute;
+  right: 12px;
+  bottom: 14px;
+}
+
+.show-password-wrapper input[type="checkbox"] {
+  width: 14px !important;
+  height: 14px !important;
+  cursor: pointer;
+  accent-color: #7B2FBE;
+}
+
+#checkboxLabel {
+  font-size: 11px !important;
+  color: #ADB5BD !important;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+}
+
+.forgot-wrapper {
+  text-align: right;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+.forgot-link {
+  font-size: 13px;
+  color: #ADB5BD;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.forgot-link:hover {
+  color: #C77DFF;
+  text-decoration: underline;
+}
+
+
+/* ==========================================================================
+   SECTION 22: RESPONSIVE MOBILE OPTIMIZATION ENGINE
+   Target Files: All Application Windows HTML Layout Modules
+   Target Scripts: Multi-Device Viewport Adapters Loop
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+  
+  .navbar {
+    padding: 14px 24px; /* Shrank wide desktop padding down */
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .nav-links {
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .nav-links a {
+    font-size: 13px; /* Slightly more readable scale for smaller touch targets */
+  }
+
+  .hero {
+    padding: 60px 16px 50px; /* Reduced deep top padding */
+  }
+
+  /* Watermark positioning adjustment for vertical viewports */
+  .hero::before {
+    top: 40%;
+    font-size: clamp(6rem, 28vw, 12rem); /* Constrained mobile expansion scale bounds */
+    opacity: 0.025; /* Made slightly lighter on mobile screens to maintain readability */
+  }
+
+  .hero h1 {
+    font-size: 38px; /* Brought down from 62px to stop ugly text-wrapping splits */
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+  
+  .hero p br {
+    display: none; /* Disables forcing line breaks that make paragraph blocks look uneven on mobiles */
+  }
+
+  .hero-buttons {
+    flex-direction: column; /* Stacked primary buttons vertically */
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto 36px auto;
+    gap: 12px;
+  }
+  
+  .btn, .btn-outline {
+    width: 100%; /* Makes buttons full touch target width */
+    padding: 12px 24px;
+  }
+
+  .hero-stats {
+    flex-direction: column; /* Stacks layout stats rows vertically */
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .stat {
+    width: 100%;
+    max-width: 240px;
+    text-align: center;
+  }
+
+  .features {
+    padding: 50px 20px;
+  }
+
+  .features h2 {
+    font-size: 28px;
+  }
+
+  .cards {
+    gap: 16px;
+  }
+
+  .card {
+    width: 100%; /* Expands structural cards cleanly across mobile widths */
+    max-width: 320px;
+    padding: 24px 20px;
+  }
+
+  .why-section {
+    padding: 50px 20px;
+  }
+
+  .why-section h2 {
+    font-size: 28px;
+    margin-bottom: 24px;
+  }
+
+  .why-cards {
+    gap: 14px;
+  }
+
+  .why-card {
+    width: 100%; /* Expands why-cards layout cleanly across mobile widths */
+    max-width: 320px;
+    padding: 20px;
+  }
+
+  .tool-page {
+    margin: 30px auto;
+  }
+
+  .tool-header h1 {
+    font-size: 28px;
+  }
+
+  /* Fixes wide navbar profile alignment rules for device viewports */
+  .profile-dropdown {
+    right: 50%;
+    transform: translateX(50%); /* Centers dropdown cleanly when clicked on mobile viewports */
+    top: 50px;
+  }
+}

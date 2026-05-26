@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOPA AI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="bg-ball ball-1"></div>
+  <div class="bg-ball ball-2"></div>
+  <div class="bg-ball ball-3"></div>
+
+  <nav class="navbar">
+    <div class="logo">DOPA <span>AI</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="doubt.html">Doubt Solver</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="planner.html">Study Planner</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="youtube.html">YouTube Study</a></li>
+      
+      <li class="profile-container" id="userProfileComponent" style="display: none;">
+        <div class="profile-avatar" onclick="toggleProfileDropdown(event)">
+          <span id="userInitial">U</span>
+        </div>
+        <div class="profile-dropdown" id="profileDropdown">
+          <div class="dropdown-header">
+            <p class="user-display-name" id="dropdownName">Student Name</p>
+            <p class="user-display-email" id="dropdownEmail">student@dopaai.com</p>
+          </div>
+          <hr class="dropdown-divider">
+          <a href="#" class="logout-btn" onclick="handleLogout(event)">
+            <span>🚪</span> Log Out
+          </a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge">🚀 AI Powered Study Assistant</div>
+    <h1>Learn Smarter.<br><span>Not Harder.</span></h1>
+    <p>DOPA AI is your personal 24/7 study companion —<br>powered by AI, built for students like you.</p>
+    <div class="hero-buttons">
+      <a href="auth.html" class="btn" id="getStartedBtn">Get Started Free 🚀</a>
+      <a href="#features" class="btn-outline">See Features</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">📚 5 AI Tools</div>
+      <div class="stat">⚡ Instant Answers</div>
+      <div class="stat">🆓 100% Free</div>
+    </div>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="features-label">WHAT WE OFFER</div>
+    <h2>What DOPA AI Can Do</h2>
+    <p class="features-sub">Everything a student needs — all in one place</p>
+    <div class="cards">
+
+      <div class="card">
+        <div class="icon">🤖</div>
+        <h3>AI Doubt Solver</h3>
+        <p>Ask any question and get a clear instant explanation in seconds.</p>
+        <a href="doubt.html" class="btn-small auth-gate">Try Now →</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">📝</div>
+        <h3>Quiz Generator</h3>
+        <p>Enter any topic and get 5 MCQ practice questions instantly.</p>
+        <a href="quiz.html" class="btn-small auth-gate">Try Now →</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">📅</div>
+        <h3>Study Planner</h3>
+        <p>Tell us your exam date and get a smart day-by-day study plan.</p>
+        <a href="planner.html" class="btn-small auth-gate">Try Now →</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">📚</div>
+        <h3>Resource Finder</h3>
+        <p>Get the best YouTube videos and free courses for any topic.</p>
+        <a href="resources.html" class="btn-small auth-gate">Try Now →</a>
+      </div>
+
+      <div class="card">
+        <div class="icon">🎬</div>
+        <h3>YouTube Study</h3>
+        <p>Paste any YouTube URL and get Notes, Quiz and Assignment instantly.</p>
+        <a href="youtube.html" class="btn-small auth-gate">Try Now →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="why-section">
+    <div class="features-label">WHY DOPA AI</div>
+    <h2>Built For Students</h2>
+    <div class="why-cards">
+      <div class="why-card">
+        <div class="why-icon">🌙</div>
+        <h4>Available 24/7</h4>
+        <p>Study at 2AM with no problem. DOPA AI never sleeps.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⚡</div>
+        <h4>Instant Results</h4>
+        <p>Get answers in seconds, not hours of searching Google.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🎯</div>
+        <h4>Made for India</h4>
+        <p>Designed keeping Indian students and syllabus in mind.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🆓</div>
+        <h4>Completely Free</h4>
+        <p>No subscriptions, no hidden fees. Always free for students.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">DOPA <span>AI</span></div>
+    <p>Built for Students, Powered by AI 🚀</p>
+    <p class="footer-sub">Made with ❤️ for BuildVerse Hackathon '26</p>
+  </footer>
+
+  <script>
+    // Run core initialization as soon as document structures finish loading
+    document.addEventListener("DOMContentLoaded", () => {
+      initNavbarProfile();
+    });
+
+    // 1. Initialise and Display active Profile settings in the Header
+    function initNavbarProfile() {
+      const isUserLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+      const profileComponent = document.getElementById("userProfileComponent");
+
+      if (isUserLoggedIn && profileComponent) {
+        profileComponent.style.display = "inline-block";
+
+        let activeEmail = "";
+        let activeName = "Student";
+
+        // Find the registered username details stored inside localStorage keys
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith("user_")) {
+            activeEmail = key.replace("user_", "");
+            const rawData = localStorage.getItem(key);
+            if (rawData) {
+              try {
+                const parsed = JSON.parse(rawData);
+                activeName = parsed.name || "Student";
+              } catch (e) {
+                console.error("Failed to parse metadata", e);
+              }
+            }
+            break;
+          }
+        }
+
+        // Apply metadata updates straight to DOM nodes
+        const initialText = document.getElementById("userInitial");
+        const nameLabel = document.getElementById("dropdownName");
+        const emailLabel = document.getElementById("dropdownEmail");
+
+        if (initialText) initialText.innerText = activeName.charAt(0);
+        if (nameLabel) nameLabel.innerText = activeName;
+        if (emailLabel) emailLabel.innerText = activeEmail || "student@dopaai.com";
+      }
+    }
+
+    // 2. Open and Close dropdown menus smoothly
+    function toggleProfileDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById("profileDropdown");
+      if (dropdown) dropdown.classList.toggle("show");
+    }
+
+    // Hide dropdown menu layer card immediately if user clicks off-target
+    window.addEventListener("click", () => {
+      const dropdown = document.getElementById("profileDropdown");
+      if (dropdown && dropdown.classList.contains("show")) {
+        dropdown.classList.remove("show");
+      }
+    });
+
+    // 3. Clear session profile validation and kick down into index
+    function handleLogout(event) {
+      event.preventDefault();
+      const userConfirm = confirm("Are you sure you want to log out of DOPA AI?");
+      if (userConfirm) {
+        localStorage.removeItem("isLoggedIn");
+        window.location.reload(); // Instantly update view tracking frames
+      }
+    }
+
+    // 4. Smart Redirect for the primary 'Get Started Free' Hero Button
+    document.getElementById("getStartedBtn").addEventListener("click", function(e) {
+      if (localStorage.getItem("isLoggedIn") === "true") {
+        e.preventDefault(); 
+        window.location.href = "doubt.html";
+      }
+    });
+
+    // 5. Smart Redirect for individual Feature Cards
+    document.querySelectorAll(".auth-gate").forEach(function(element) {
+      element.addEventListener("click", function(e) {
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+          e.preventDefault();
+          window.location.href = "auth.html";
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

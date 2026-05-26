@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOPA AI - Quiz Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="bg-ball ball-1"></div>
+  <div class="bg-ball ball-2"></div>
+  <div class="bg-ball ball-3"></div>
+
+  <nav class="navbar">
+    <div class="logo">DOPA <span>AI</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="doubt.html">Doubt Solver</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="planner.html">Study Planner</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="youtube.html">YouTube Study</a></li>
+      
+      <li class="profile-container" id="userProfileComponent" style="display: none;">
+        <div class="profile-avatar" onclick="toggleProfileDropdown(event)">
+          <span id="userInitial">U</span>
+        </div>
+        <div class="profile-dropdown" id="profileDropdown">
+          <div class="dropdown-header">
+            <p class="user-display-name" id="dropdownName">Student Name</p>
+            <p class="user-display-email" id="dropdownEmail">student@dopaai.com</p>
+          </div>
+          <hr class="dropdown-divider">
+          <a href="#" class="logout-btn" onclick="handleLogout(event)">
+            <span>🚪</span> Log Out
+          </a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <section class="tool-page">
+    <div class="tool-header">
+      <h1>📝 Quiz Generator</h1>
+      <p>Enter any topic and get your custom MCQ practice questions instantly.</p>
+    </div>
+
+    <div class="tool-box">
+      <input type="text" id="topicInput" placeholder="Enter topic... e.g. Photosynthesis" />
+      
+      <div class="input-wrapper" style="margin-top: 4px; margin-bottom: 4px;">
+        <label class="input-label" style="display: block; margin-bottom: 8px; font-size: 13px; color: #ADB5BD; font-weight: 600;">Number of Questions</label>
+        <input type="number" id="numQuestions" value="5" min="1" max="15" placeholder="Enter question count (Max 15)" />
+      </div>
+
+      <button class="btn" onclick="generateQuiz()">Generate Quiz</button>
+    </div>
+
+    <div class="answer-box" id="quizBox">
+      <h2 class="topic-heading" id="quizTopic">Your Quiz:</h2>
+      <div id="quizContent">
+        <p style="color: #ADB5BD">Your quiz will appear here...</p>
+      </div>
+      <button class="btn" id="submitQuizBtn" onclick="evaluateQuizScores()" style="margin-top: 24px; width: 100%; display: none;">Submit Answers 📄</button>
+    </div>
+
+    <div class="accuracy-box" id="performanceMetricsBox" style="display: none; margin-top: 30px;">
+      <h3 class="accuracy-title">Quiz Performance Analytics</h3>
+      <div class="accuracy-stats">
+        <div class="accuracy-stat">
+          <span class="accuracy-num" id="scoreRatioLabel">0/0</span>
+          <span class="accuracy-label">Correct Answers</span>
+        </div>
+        <div class="accuracy-stat">
+          <span class="accuracy-num" id="accuracyPercentageLabel">0%</span>
+          <span class="accuracy-label">Total Accuracy</span>
+        </div>
+      </div>
+      <div class="accuracy-bar">
+        <div class="accuracy-fill" id="accuracyProgressBarFill" style="width: 0%;"></div>
+      </div>
+      <div class="accuracy-msg" id="performanceMessageSummary">Select your answers carefully to view your report card!</div>
+    </div>
+
+  </section>
+
+  <footer>
+    <p>DOPA AI — Built for Students, Powered by AI 🚀</p>
+  </footer>
+
+  <script src="quiz.js"></script>
+
+  <script>
+    // SECURITY GUARD ROUTER: Kick out any unauthenticated local traffic loops
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "auth.html";
+    }
+
+    // Initialize layout setup modules as soon as resources settle
+    document.addEventListener("DOMContentLoaded", () => {
+      initNavbarProfile();
+    });
+
+    // Extract logged session details from local cookies array matrices
+    function initNavbarProfile() {
+      const profileComponent = document.getElementById("userProfileComponent");
+      if (profileComponent) {
+        profileComponent.style.display = "inline-block";
+
+        let activeEmail = "";
+        let activeName = "Student";
+
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith("user_")) {
+            activeEmail = key.replace("user_", "");
+            const rawData = localStorage.getItem(key);
+            if (rawData) {
+              try {
+                const parsed = JSON.parse(rawData);
+                activeName = parsed.name || "Student";
+              } catch (e) {
+                console.error("Profile parsing error log context triggered: ", e);
+              }
+            }
+            break;
+          }
+        }
+
+        const initialText = document.getElementById("userInitial");
+        const nameLabel = document.getElementById("dropdownName");
+        const emailLabel = document.getElementById("dropdownEmail");
+
+        if (initialText) initialText.innerText = activeName.charAt(0);
+        if (nameLabel) nameLabel.innerText = activeName;
+        if (emailLabel) emailLabel.innerText = activeEmail || "student@dopaai.com";
+      }
+    }
+
+    // Toggle Dropdown layers visibility configurations
+    function toggleProfileDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById("profileDropdown");
+      if (dropdown) dropdown.classList.toggle("show");
+    }
+
+    window.addEventListener("click", () => {
+      const dropdown = document.getElementById("profileDropdown");
+      if (dropdown && dropdown.classList.contains("show")) {
+        dropdown.classList.remove("show");
+      }
+    });
+
+    // Clear tracking flags and route browser view back to index landing paths
+    function handleLogout(event) {
+      event.preventDefault();
+      const userConfirm = confirm("Are you sure you want to log out of DOPA AI?");
+      if (userConfirm) {
+        localStorage.removeItem("isLoggedIn");
+        window.location.href = "index.html";
+      }
+    }
+  </script>
+
+</body>
+</html>

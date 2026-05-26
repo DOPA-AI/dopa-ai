@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOPA AI - Study Planner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">DOPA <span>AI</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="doubt.html">Doubt Solver</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="planner.html">Study Planner</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="youtube.html">YouTube Study</a></li>
+    </ul>
+  </nav>
+
+  <section class="tool-page">
+    <div class="tool-header">
+      <h1>📅 Smart Study Planner</h1>
+      <p>Enter your subject and we'll build a perfect study plan for you.</p>
+    </div>
+
+    <!-- STEP 1 — SUBJECT -->
+    <div class="planner-step" id="step1">
+      <div class="step-label">STEP 1</div>
+      <h3 class="step-title">What subject do you want to study?</h3>
+      <div class="tool-box">
+        <input type="text" id="subjectInput"
+          placeholder="e.g. Physics, Mathematics, Biology, C++..." />
+        <button class="btn" onclick="loadCourses()">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 — COURSE -->
+    <div class="planner-step" id="step2" style="display:none">
+      <div class="step-label">STEP 2</div>
+      <h3 class="step-title">What is your course or level?</h3>
+      <div class="course-grid" id="courseGrid"></div>
+    </div>
+
+    <!-- STEP 3 — TOPICS -->
+    <div class="planner-step" id="step3" style="display:none">
+      <div class="step-label">STEP 3</div>
+      <h3 class="step-title">Select topics you want to cover</h3>
+      <p class="step-sub">AI generated topics for your subject and course</p>
+      <div id="topicsLoading" style="display:none">
+        <p style="color:#C77DFF">🤖 Generating topics... ⏳</p>
+      </div>
+      <div class="topics-grid" id="topicsGrid"></div>
+      <div class="topics-actions">
+        <button class="btn-outline-small" onclick="selectAllTopics()">Select All</button>
+        <button class="btn-outline-small" onclick="clearAllTopics()">Clear All</button>
+      </div>
+      <button class="btn" onclick="goToStep4()" style="margin-top:16px">
+        Next →
+      </button>
+    </div>
+
+    <!-- STEP 4 — DATE AND TIME -->
+    <div class="planner-step" id="step4" style="display:none">
+      <div class="step-label">STEP 4</div>
+      <h3 class="step-title">When is your exam and how much can you study?</h3>
+      <div class="tool-box">
+        <label class="input-label">📅 Exam Date</label>
+        <input type="date" id="examDate" />
+        <label class="input-label">⏰ Study hours per day</label>
+        <input type="number" id="hoursInput"
+          placeholder="e.g. 3" min="1" max="12" />
+        <button class="btn" onclick="generatePlan()">
+          🚀 Generate My Study Plan
+        </button>
+      </div>
+    </div>
+
+    <!-- PLAN OUTPUT -->
+    <div class="answer-box" id="planBox" style="display:none">
+      <h3>Your Study Plan:</h3>
+      <div id="planContent"></div>
+    </div>
+
+  </section>
+
+  <footer>
+    <p>DOPA AI — Built for Students, Powered by AI 🚀</p>
+  </footer>
+
+  <script src="planner.js"></script>
+</body>
+</html>

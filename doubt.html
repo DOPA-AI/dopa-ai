@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOPA AI - Doubt Solver</title>
+  <link rel="stylesheet" href="style.css" />
+  
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <div class="bg-ball ball-1"></div>
+  <div class="bg-ball ball-2"></div>
+  <div class="bg-ball ball-3"></div>
+
+  <nav class="navbar">
+    <div class="logo">DOPA <span>AI</span></div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="doubt.html">Doubt Solver</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="planner.html">Study Planner</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="youtube.html">YouTube Study</a></li>
+      
+      <li class="profile-container" id="userProfileComponent" style="display: none;">
+        <div class="profile-avatar" onclick="toggleProfileDropdown(event)">
+          <span id="userInitial">U</span>
+        </div>
+        <div class="profile-dropdown" id="profileDropdown">
+          <div class="dropdown-header">
+            <p class="user-display-name" id="dropdownName">Student Name</p>
+            <p class="user-display-email" id="dropdownEmail">student@dopaai.com</p>
+          </div>
+          <hr class="dropdown-divider">
+          <a href="#" class="logout-btn" onclick="handleLogout(event)">
+            <span>🚪</span> Log Out
+          </a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+
+  <section class="tool-page">
+    <div class="tool-header">
+      <h1>🤖 AI Doubt Solver</h1>
+      <p>Type, speak, or upload an image — get instant answers!</p>
+    </div>
+
+    <div class="tool-box">
+
+      <div class="input-wrapper">
+        <textarea id="questionInput"
+          placeholder="Type your doubt here, use mic 🎤 or upload image 📸"></textarea>
+        <button class="mic-btn" id="micBtn" onclick="startSpeech()">🎤</button>
+      </div>
+      <div id="micStatus"></div>
+
+      <div class="upload-section">
+        <label class="upload-label" for="imageUpload">
+          <span class="upload-icon">📸</span>
+          <span id="uploadText">Upload Image of your question</span>
+        </label>
+        <input type="file" id="imageUpload"
+          accept="image/*"
+          onchange="handleFileUpload(this)"
+          style="display:none" />
+      </div>
+
+      <div id="imagePreview" style="display:none">
+        <img id="previewImg" src="" alt="Uploaded question" />
+        <button class="remove-btn" onclick="removeImage()">✕ Remove</button>
+      </div>
+
+      <button class="btn" onclick="solveDoubt()">Get Answer</button>
+    </div>
+
+    <div class="answer-box" id="answerBox">
+      <h3>DOPA AI says:</h3>
+      <div id="answerText">
+        <p style="color:#ADB5BD">Your answer will appear here...</p>
+      </div>
+    </div>
+
+  </section>
+
+  <footer>
+    <p>DOPA AI — Built for Students, Powered by AI 🚀</p>
+  </footer>
+
+  <script src="doubt.js"></script>
+
+  <script>
+    // SECURITY GUARD: Instantly kick unauthorized traffic out to login screen
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "auth.html";
+    }
+
+    // Run initialization scripts once structural resources finish parsing
+    document.addEventListener("DOMContentLoaded", () => {
+      initNavbarProfile();
+    });
+
+    // Extract storage session indicators and build active user menu
+    function initNavbarProfile() {
+      const profileComponent = document.getElementById("userProfileComponent");
+      if (profileComponent) {
+        profileComponent.style.display = "inline-block";
+
+        let activeEmail = "";
+        let activeName = "Student";
+
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith("user_")) {
+            activeEmail = key.replace("user_", "");
+            const rawData = localStorage.getItem(key);
+            if (rawData) {
+              try {
+                const parsed = JSON.parse(rawData);
+                activeName = parsed.name || "Student";
+              } catch (e) {
+                console.error("Failed to parse metadata", e);
+              }
+            }
+            break;
+          }
+        }
+
+        const initialText = document.getElementById("userInitial");
+        const nameLabel = document.getElementById("dropdownName");
+        const emailLabel = document.getElementById("dropdownEmail");
+
+        if (initialText) initialText.innerText = activeName.charAt(0);
+        if (nameLabel) nameLabel.innerText = activeName;
+        if (emailLabel) emailLabel.innerText = activeEmail || "student@dopaai.com";
+      }
+    }
+
+    // Dropdown layer controls
+    function toggleProfileDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById("profileDropdown");
+      if (dropdown) dropdown.classList.toggle("show");
+    }
+
+    window.addEventListener("click", () => {
+      const dropdown = document.getElementById("profileDropdown");
+      if (dropdown && dropdown.classList.contains("show")) {
+        dropdown.classList.remove("show");
+      }
+    });
+
+    // Clear active status cookies on confirmation parameters
+    function handleLogout(event) {
+      event.preventDefault();
+      const userConfirm = confirm("Are you sure you want to log out of DOPA AI?");
+      if (userConfirm) {
+        localStorage.removeItem("isLoggedIn");
+        window.location.href = "index.html"; // Send completely out to landing page
+      }
+    }
+  </script>
+
+</body>
+</html>

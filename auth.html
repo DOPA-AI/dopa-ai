@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOPA AI - Authentication</title>
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+  <div class="bg-ball ball-1"></div>
+  <div class="bg-ball ball-2"></div>
+
+  <div class="auth-container">
+    <div class="auth-box">
+      <div class="auth-logo">DOPA <span>AI</span></div>
+      
+      <h2 id="formTitle">Welcome Back</h2>
+      <p id="formSubtitle">Login to continue your smart learning journey.</p>
+
+      <form id="authForm" onsubmit="handleAuth(event)">
+        <div class="input-group" id="nameField" style="display: none;">
+          <label>Full Name</label>
+          <input type="text" id="authName" placeholder="Enter your full name">
+        </div>
+
+        <div class="input-group" id="emailField">
+          <label>Email Address</label>
+          <input type="email" id="authEmail" placeholder="student@dopaai.com">
+        </div>
+
+        <div class="input-group" id="passwordField" style="position: relative;">
+          <label>Password</label>
+          <input type="password" id="authPassword" placeholder="••••••••">
+          
+          <div class="show-password-wrapper">
+            <input type="checkbox" id="togglePasswordCheckbox" onclick="togglePasswordVisibility('authPassword', 'togglePasswordCheckbox')">
+            <label for="togglePasswordCheckbox" id="checkboxLabel">Show</label>
+          </div>
+        </div>
+
+        <div id="resetFields" style="display: none;">
+          <div class="input-group">
+            <label>New Password</label>
+            <input type="password" id="newPassword" placeholder="••••••••">
+          </div>
+          <div class="input-group" style="position: relative; margin-bottom: 32px;">
+            <label>Confirm New Password</label>
+            <input type="password" id="confirmNewPassword" placeholder="••••••••">
+          </div>
+          
+          <div class="reset-show-pass-row">
+            <input type="checkbox" id="toggleResetPasswordCheckbox" onclick="toggleResetFieldsVisibility()">
+            <label for="toggleResetPasswordCheckbox">Show Passwords</label>
+          </div>
+        </div>
+
+        <div class="forgot-wrapper" id="forgotWrapper">
+          <a href="#" class="forgot-link" onclick="switchToResetEmailMode(event)">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="auth-btn" id="submitBtn">Log In</button>
+      </form>
+
+      <div id="resetSuccessBlock" style="display: none; text-align: center;">
+        <div class="success-icon">✅</div>
+        <h3 style="color: #28a745; font-size: 20px; font-weight: 800; margin-bottom: 8px;">Password Reset Done!</h3>
+        <p style="color: #ADB5BD; font-size: 14px; margin-bottom: 24px;">Your new password has been successfully configured.</p>
+        <button class="auth-btn sub-btn" onclick="returnToLoginLayout(event)">Return to Login Page</button>
+      </div>
+
+      <div id="authSuccessBlock" style="display: none; text-align: center;">
+        <div class="success-icon">🎉</div>
+        <h3 id="successStatusTitle" style="color: #28a745; font-size: 20px; font-weight: 800; margin-bottom: 8px;">Login Successful!</h3>
+        <p id="successStatusDesc" style="color: #ADB5BD; font-size: 14px; margin-bottom: 24px;">Welcome back to DOPA AI! Ready to unlock elite study resources?</p>
+        <button class="auth-btn" onclick="enterApplicationWorkspace(event)">OK</button>
+      </div>
+
+      <div class="auth-toggle" id="authToggleContainer">
+        <span id="toggleMsg">Don't have an account?</span> 
+        <a href="#" id="toggleLink" onclick="toggleMode(event)">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
