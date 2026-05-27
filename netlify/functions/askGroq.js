@@ -16,10 +16,19 @@ exports.handler = async function (event, context) {
         const bodyData = JSON.parse(event.body);
         const secretKey = process.env.GROQ_API_KEY;
 
+        // DIAGNOSTIC CHECK: Let's see what the server actually sees
+        if (!secretKey) {
+            return {
+                statusCode: 400,
+                headers: { "Access-Control-Allow-Origin": "*" },
+                body: JSON.stringify({ error: "Server check: GROQ_API_KEY environment variable is completely empty or missing." })
+            };
+        }
+
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${secretKey}`,
+                "Authorization": `Bearer ${secretKey.trim()}`, // Added trim to auto-kill hidden spaces
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
@@ -29,6 +38,15 @@ exports.handler = async function (event, context) {
         });
 
         const data = await response.json();
+
+        // If Groq rejects it, pass the exact raw error back to see it
+        if (data.error) {
+            return {
+                statusCode: 400,
+                headers: { "Access-Control-Allow-Origin": "*" },
+                body: JSON.stringify({ error: `Groq API direct message: ${data.error.message} (Key starts with: "${secretKey.substring(0, 7)}..." and is ${secretKey.length} chars long)` })
+            };
+        }
 
         return {
             statusCode: 200,
