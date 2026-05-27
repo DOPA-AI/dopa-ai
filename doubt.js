@@ -4,9 +4,6 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
   window.location.href = "auth.html";
 }
 
-// ── API KEY ──
-const GROQ_API_KEY = localStorage.getItem("groq_api_key") || "DEVELOPMENT_KEY_PLACEHOLDER";
-
 // ── SPEECH RECOGNITION ──
 let recognition = null;
 let isListening = false;
@@ -37,7 +34,7 @@ async function solveDoubt() {
   }
 }
 
-// ── GROQ SOLVER (TEXT & VISION) ──
+// ── GROQ SOLVER (TEXT & VISION VIA SERVERLESS BACKEND) ──
 async function solveWithGroq(question, base64Data = null, mimeType = null) {
   // Added standard instruction telling the AI to format equations cleanly using LaTeX format
   const systemPrompt = "You are DOPA AI, a friendly study assistant for students. Answer questions in simple clear points. Use ## for main section headings and ** for sub point names. Never use bullet points or numbered lists. Use standard LaTeX syntax for mathematical symbols, variables, or equations (e.g. use \\[ and \\] for display equations, and \\( and \\) for inline formulas). Respond in ENGLISH ONLY.";
@@ -68,11 +65,11 @@ async function solveWithGroq(question, base64Data = null, mimeType = null) {
     ];
   }
 
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+  // Secure backend routing channel hitting our internal Netlify serverless gateway
+  const response = await fetch("/.netlify/functions/askGroq", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${GROQ_API_KEY}`
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       model: modelName,
@@ -99,7 +96,7 @@ function displayAnswer(answer, question) {
     if (!line) return;
 
     if (line.match(/^#{1,6}\s*/)) {
-      const text = line.replace(/^#{1,6}\s*/, "").replace(/\*\*/g, "").trim();
+      const text = line.replace(/^#{1,6}\s*/, "").replace(/\*\//g, "").trim();
       if (text) html += `<h3 class="sub-question">${text}</h3>`;
 
     } else if (line.match(/^\*\*(.*?)\*\*/)) {
@@ -237,27 +234,3 @@ function startSpeech() {
 
   recognition.start();
 }
-
-
-// Dynamic AI Activation Handler
-function activateSystemKey() {
-    const inputKey = document.getElementById("groq-user-key").value.trim();
-    
-    if (inputKey.startsWith("gsk_")) {
-        localStorage.setItem("groq_api_key", inputKey);
-        alert("🎉 System Active! DOPA AI features are now successfully unlocked on your browser.");
-        location.reload(); 
-    } else {
-        alert("⚠️ Invalid Token! Please ensure you paste a valid Groq API Key starting with 'gsk_'.");
-    }
-}
-
-// Auto-hide panel if system is already active on this specific machine
-document.addEventListener("DOMContentLoaded", () => {
-    if (localStorage.getItem("groq_api_key")) {
-        const panel = document.getElementById("ai-activation-panel");
-        if (panel) {
-            panel.innerHTML = `<div style="background: #118833; color: #fff; padding: 8px; text-align: center; font-size: 14px; font-family: sans-serif;">🛡️ DOPA AI Engine: Connected and Secured via LocalStorage Cache</div>`;
-        }
-    }
-});

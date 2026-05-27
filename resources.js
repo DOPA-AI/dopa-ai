@@ -4,9 +4,6 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
   window.location.href = "auth.html";
 }
 
-// API Key
-const GROQ_API_KEY = localStorage.getItem("groq_api_key") || "DEVELOPMENT_KEY_PLACEHOLDER";
-
 async function findResources() {
   const topic = document.getElementById("resourceInput").value;
 
@@ -19,11 +16,11 @@ async function findResources() {
     "<p style='color:#C77DFF'>Finding best resources... ⏳</p>";
 
   try {
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    // Secure backend routing channel hitting our internal Netlify serverless gateway
+    const response = await fetch("/.netlify/functions/askGroq", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${GROQ_API_KEY}`
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         model: "llama-3.1-8b-instant",

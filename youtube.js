@@ -4,9 +4,6 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
   window.location.href = "auth.html";
 }
 
-// API Key
-const GROQ_API_KEY = localStorage.getItem("groq_api_key") || "DEVELOPMENT_KEY_PLACEHOLDER";
-
 // Store generated content
 let generatedContent = {
   notes: "",
@@ -128,13 +125,12 @@ async function generateContent() {
   }
 }
 
-// ── GENERATE NOTES ──
+// ── GENERATE NOTES VIA SERVERLESS BACKEND ──
 async function generateNotes(topic, level) {
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+  const response = await fetch("/.netlify/functions/askGroq", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${GROQ_API_KEY}`
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       model: "llama-3.1-8b-instant",
@@ -146,26 +142,26 @@ async function generateNotes(topic, level) {
         {
           role: "user",
           content: `IMPORTANT: Respond in ENGLISH ONLY. Do not use any other language.
-           Create detailed study notes in English for a student on the topic: "${topic}"
+             Create detailed study notes in English for a student on the topic: "${topic}"
 
-           Format EXACTLY like this:
+             Format EXACTLY like this:
 
-           OVERVIEW:
-           [2-3 sentence summary]
+             OVERVIEW:
+             [2-3 sentence summary]
 
-           KEY POINTS:
-           POINT: [Point name]
-           [explanation]
+             KEY POINTS:
+             POINT: [Point name]
+             [explanation]
 
-           POINT: [Point name]
-           [explanation]
+             POINT: [Point name]
+             [explanation]
 
-           IMPORTANT TERMS:
-           TERM: [term] - [definition]
-           TERM: [term] - [definition]
+             IMPORTANT TERMS:
+             TERM: [term] - [definition]
+             TERM: [term] - [definition]
 
-           SUMMARY:
-           [3-4 key takeaways]`
+             SUMMARY:
+             [3-4 key takeaways]`
         }
       ]
     })
@@ -174,14 +170,12 @@ async function generateNotes(topic, level) {
   const data = await response.json();
   return data.choices[0].message.content;
 }
-
-// ── GENERATE QUIZ CONTENT ──
+// ── GENERATE QUIZ CONTENT VIA SERVERLESS BACKEND ──
 async function generateQuizContent(topic, level) {
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+  const response = await fetch("/.netlify/functions/askGroq", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${GROQ_API_KEY}`
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       model: "llama-3.1-8b-instant",
@@ -193,16 +187,16 @@ async function generateQuizContent(topic, level) {
         {
           role: "user",
           content: `IMPORTANT: Respond in ENGLISH ONLY. Do not use any other language.
-        Create exactly 20 MCQ questions in English about "${topic}".
-          Format EXACTLY like this:
-          Q1. Question here?
-          A) Option one
-          B) Option two
-          C) Option three
-          D) Option four
-          Answer: A
+          Create exactly 20 MCQ questions in English about "${topic}".
+            Format EXACTLY like this:
+            Q1. Question here?
+            A) Option one
+            B) Option two
+            C) Option three
+            D) Option four
+            Answer: A
 
-          Do this for all 20 questions. Nothing else.`
+            Do this for all 20 questions. Nothing else.`
         }
       ]
     })
@@ -212,13 +206,12 @@ async function generateQuizContent(topic, level) {
   return data.choices[0].message.content;
 }
 
-// ── GENERATE ASSIGNMENT ──
+// ── GENERATE ASSIGNMENT VIA SERVERLESS BACKEND ──
 async function generateAssignment(topic, level) {
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+  const response = await fetch("/.netlify/functions/askGroq", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${GROQ_API_KEY}`
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       model: "llama-3.1-8b-instant",
@@ -230,28 +223,28 @@ async function generateAssignment(topic, level) {
         {
           role: "user",
           content: `IMPORTANT: Respond in ENGLISH ONLY. Do not use any other language.
-      Create a complete assignment in English for a student on the topic: "${topic}"
-          Format EXACTLY like this:
+        Create a complete assignment in English for a student on the topic: "${topic}"
+            Format EXACTLY like this:
 
-          TITLE: [Assignment Title]
+            TITLE: [Assignment Title]
 
-          OBJECTIVE:
-          [What student will learn]
+            OBJECTIVE:
+            [What student will learn]
 
-          SHORT QUESTIONS: (Answer in 2-3 lines)
-          Q1. [question]
-          Q2. [question]
-          Q3. [question]
+            SHORT QUESTIONS: (Answer in 2-3 lines)
+            Q1. [question]
+            Q2. [question]
+            Q3. [question]
 
-          LONG QUESTIONS: (Answer in detail)
-          Q1. [question]
-          Q2. [question]
+            LONG QUESTIONS: (Answer in detail)
+            Q1. [question]
+            Q2. [question]
 
-          PRACTICAL TASK:
-          [A hands-on activity or experiment related to topic]
+            PRACTICAL TASK:
+            [A hands-on activity or experiment related to topic]
 
-          SUBMISSION NOTE:
-          [Instructions for submission]`
+            SUBMISSION NOTE:
+            [Instructions for submission]`
         }
       ]
     })
