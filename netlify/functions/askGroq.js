@@ -1,6 +1,6 @@
-// netlify/functions/askGroq.js
+const fetch = require("node-fetch");
+
 exports.handler = async function (event, context) {
-    // Handle browser pre-flight security checks safely
     if (event.httpMethod === "OPTIONS") {
         return {
             statusCode: 200,
@@ -14,7 +14,7 @@ exports.handler = async function (event, context) {
 
     try {
         const bodyData = JSON.parse(event.body);
-        const secretKey = process.env.GROQ_API_KEY; // Securely grabs the key from Netlify cloud vault
+        const secretKey = process.env.GROQ_API_KEY;
 
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
@@ -23,7 +23,7 @@ exports.handler = async function (event, context) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                model: "mixtral-8x7b-32768",
+                model: bodyData.model || "llama-3.1-8b-instant",
                 messages: bodyData.messages
             })
         });
