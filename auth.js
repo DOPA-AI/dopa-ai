@@ -186,7 +186,11 @@ function handleAuth(e) {
       return;
     }
 
+    // Save detailed user parameters map configuration
     localStorage.setItem(`user_${email}`, JSON.stringify({ name: name, password: password }));
+    
+    // AUTOMATION TRACK: Synchronize active email identity for instantly updating navbar profile layouts
+    localStorage.setItem("savedEmail", email);
     
     // Configure success messages dynamically for registering accounts
     document.getElementById("successStatusTitle").innerText = "Account Created! 🎉";
@@ -213,6 +217,9 @@ function handleAuth(e) {
     
     const userData = JSON.parse(savedUser);
     if (userData.password === password) {
+      // AUTOMATION TRACK: Synchronize active email identity for instantly updating navbar profile layouts
+      localStorage.setItem("savedEmail", email);
+
       // Configure success messages dynamically for standard logins
       document.getElementById("successStatusTitle").innerText = "Login Successful! ✅";
       document.getElementById("successStatusDesc").innerText = `Welcome back, ${userData.name}! Ready to continue your premium learning track?`;
