@@ -1,6 +1,6 @@
 // SMART ROUTING: If user is already logged in, redirect them immediately to your landing hub
 if (localStorage.getItem("isLoggedIn") === "true") {
-  window.location.href = "doubt.html";
+  window.location.href = "index.html";
 }
 
 let currentMode = "login"; // Modes: "login", "signup", "reset_email", "reset_password", "reset_success", "auth_success"
@@ -32,7 +32,7 @@ function returnToLoginLayout(e) {
 function enterApplicationWorkspace(e) {
   if (e) e.preventDefault();
   localStorage.setItem("isLoggedIn", "true");
-  window.location.href = "doubt.html"; // Open active AI panel arrays
+  window.location.href = "index.html"; // Returns directly to home page layout
 }
 
 // Master UI state rendering coordinator tracking matrix elements
@@ -73,6 +73,9 @@ function updateUI() {
     authToggleContainer.style.display = "block";
     submitBtn.innerText = "Sign Up";
     
+    // Modification 2 Fix: Clear old text out entirely and force standard register-view toggle copy
+    authToggleContainer.innerHTML = 'Already have an account? <a href="#" onclick="toggleMode(event)">Log In</a>';
+    
     document.getElementById("authEmail").required = true;
     document.getElementById("authPassword").required = true;
 
@@ -86,6 +89,9 @@ function updateUI() {
     forgotWrapper.style.display = "block";
     authToggleContainer.style.display = "block";
     submitBtn.innerText = "Log In";
+    
+    // Modification 2 Fix: Clear old text out entirely and force standard login-view toggle copy
+    authToggleContainer.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleMode(event)">Sign Up</a>';
     
     document.getElementById("authEmail").required = true;
     document.getElementById("authPassword").required = true;
@@ -126,7 +132,6 @@ function updateUI() {
     formSubtitle.innerText = "Database restructuring logs execution verified.";
 
   } else if (currentMode === "auth_success") {
-    // Hide standard forms completely and show the success confirmation template card
     authForm.style.display = "none";
     authToggleContainer.style.display = "none";
     authSuccessBlock.style.display = "block";
@@ -159,7 +164,6 @@ function toggleResetFieldsVisibility() {
 function handleAuth(e) {
   e.preventDefault();
   
-  // Standard Email Regex evaluation pattern string structural gate
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
   if (currentMode === "signup") {
@@ -169,7 +173,6 @@ function handleAuth(e) {
     
     if (!name) { alert("Please fill in your name!"); return; }
     
-    // Catch malformed rubbish data submissions immediately
     if (!emailPattern.test(email)) {
       alert("Please enter a valid structured email address (e.g. name@gmail.com)!");
       return;
@@ -180,19 +183,14 @@ function handleAuth(e) {
       return;
     }
 
-    // CHECK FOR EXISTING RECORD: Block user from signing up an email that already exists
     if (localStorage.getItem(`user_${email}`)) {
       alert("An account with this email already exists on this browser! Please switch to Log In mode.");
       return;
     }
 
-    // Save detailed user parameters map configuration
     localStorage.setItem(`user_${email}`, JSON.stringify({ name: name, password: password }));
-    
-    // AUTOMATION TRACK: Synchronize active email identity for instantly updating navbar profile layouts
     localStorage.setItem("savedEmail", email);
     
-    // Configure success messages dynamically for registering accounts
     document.getElementById("successStatusTitle").innerText = "Account Created! 🎉";
     document.getElementById("successStatusDesc").innerText = `Welcome to the squad, ${name}! Your student registration is completely verified.`;
     
@@ -217,10 +215,8 @@ function handleAuth(e) {
     
     const userData = JSON.parse(savedUser);
     if (userData.password === password) {
-      // AUTOMATION TRACK: Synchronize active email identity for instantly updating navbar profile layouts
       localStorage.setItem("savedEmail", email);
 
-      // Configure success messages dynamically for standard logins
       document.getElementById("successStatusTitle").innerText = "Login Successful! ✅";
       document.getElementById("successStatusDesc").innerText = `Welcome back, ${userData.name}! Ready to continue your premium learning track?`;
       

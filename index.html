@@ -15,7 +15,7 @@
   <nav class="navbar">
     <div class="logo">DOPA <span>AI</span></div>
     <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html" class="nav-active">Home</a></li>
       <li><a href="doubt.html">Doubt Solver</a></li>
       <li><a href="quiz.html">Quiz</a></li>
       <li><a href="planner.html">Study Planner</a></li>
@@ -46,7 +46,7 @@
     <p>DOPA AI is your personal 24/7 study companion —<br>powered by AI, built for students like you.</p>
     <div class="hero-buttons">
       <a href="auth.html" class="btn" id="getStartedBtn">Get Started Free 🚀</a>
-      <a href="#features" class="btn-outline">See Features</a>
+      <a href="#features" class="btn-outline" id="seeFeaturesBtn">See Features</a>
     </div>
     <div class="hero-stats">
       <div class="stat">📚 5 AI Tools</div>
@@ -148,11 +148,9 @@
       if (isUserLoggedIn && profileComponent) {
         profileComponent.style.display = "inline-block";
 
-        // Pull the active logged-in email directly from storage keys
         const activeEmail = localStorage.getItem("savedEmail") || "student@dopaai.com";
         let activeName = "Student";
 
-        // Query metadata for user name mapping using your correct core storage strategy
         const rawData = localStorage.getItem(`user_${activeEmail.toLowerCase()}`);
         if (rawData) {
           try {
@@ -163,7 +161,6 @@
           }
         }
 
-        // Apply metadata updates straight to DOM nodes
         const initialText = document.getElementById("userInitial");
         const nameLabel = document.getElementById("dropdownName");
         const emailLabel = document.getElementById("dropdownEmail");
@@ -181,7 +178,6 @@
       if (dropdown) dropdown.classList.toggle("show");
     }
 
-    // Hide dropdown menu layer card immediately if user clicks off-target
     window.addEventListener("click", () => {
       const dropdown = document.getElementById("profileDropdown");
       if (dropdown && dropdown.classList.contains("show")) {
@@ -195,16 +191,22 @@
       const userConfirm = confirm("Are you sure you want to log out of DOPA AI?");
       if (userConfirm) {
         localStorage.removeItem("isLoggedIn");
-        window.location.reload(); // Instantly update view tracking frames
+        window.location.reload();
       }
     }
 
-    // 4. Smart Redirect for the primary 'Get Started Free' Hero Button
+    // 4. Smart Dynamic Actions for Hero Buttons
     document.getElementById("getStartedBtn").addEventListener("click", function(e) {
+      // If already logged in, change behavior to drop down to features smoothly instead of forcing a page jump
       if (localStorage.getItem("isLoggedIn") === "true") {
         e.preventDefault(); 
-        window.location.href = "doubt.html";
+        document.getElementById("features").scrollIntoView({ behavior: "smooth" });
       }
+    });
+
+    document.getElementById("seeFeaturesBtn").addEventListener("click", function(e) {
+      e.preventDefault();
+      document.getElementById("features").scrollIntoView({ behavior: "smooth" });
     });
 
     // 5. Smart Redirect for individual Feature Cards
