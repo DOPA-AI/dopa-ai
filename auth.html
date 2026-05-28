@@ -19,6 +19,8 @@
       <p id="formSubtitle">Login to continue your smart learning journey.</p>
 
       <form id="authForm" onsubmit="handleAuth(event)">
+        <input type="hidden" id="currentAuthMode" value="login">
+
         <div class="input-group" id="nameField" style="display: none;">
           <label>Full Name</label>
           <input type="text" id="authName" placeholder="Enter your full name">

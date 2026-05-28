@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="style.css" />
   
   <script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "auth.html";
+    }
+  </script>
+  
+  <script>
     window.MathJax = {
       tex: {
         inlineMath: [['\\(', '\\)'], ['$', '$']],
@@ -100,11 +106,6 @@
   <script src="doubt.js"></script>
 
   <script>
-    // SECURITY GUARD: Instantly kick unauthorized traffic out to login screen
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-      window.location.href = "auth.html";
-    }
-
     // Run initialization scripts once structural resources finish parsing
     document.addEventListener("DOMContentLoaded", () => {
       initNavbarProfile();
@@ -116,23 +117,18 @@
       if (profileComponent) {
         profileComponent.style.display = "inline-block";
 
-        let activeEmail = "";
+        // Pull the active logged-in email directly from storage keys
+        const activeEmail = localStorage.getItem("savedEmail") || "student@dopaai.com";
         let activeName = "Student";
 
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key.startsWith("user_")) {
-            activeEmail = key.replace("user_", "");
-            const rawData = localStorage.getItem(key);
-            if (rawData) {
-              try {
-                const parsed = JSON.parse(rawData);
-                activeName = parsed.name || "Student";
-              } catch (e) {
-                console.error("Failed to parse metadata", e);
-              }
-            }
-            break;
+        // Query metadata for user name mapping using your correct core storage strategy
+        const rawData = localStorage.getItem(`user_${activeEmail.toLowerCase()}`);
+        if (rawData) {
+          try {
+            const parsed = JSON.parse(rawData);
+            activeName = parsed.name || "Student";
+          } catch (e) {
+            console.error("Failed to parse metadata", e);
           }
         }
 
@@ -140,9 +136,9 @@
         const nameLabel = document.getElementById("dropdownName");
         const emailLabel = document.getElementById("dropdownEmail");
 
-        if (initialText) initialText.innerText = activeName.charAt(0);
+        if (initialText) initialText.innerText = activeName.charAt(0).toUpperCase();
         if (nameLabel) nameLabel.innerText = activeName;
-        if (emailLabel) emailLabel.innerText = activeEmail || "student@dopaai.com";
+        if (emailLabel) emailLabel.innerText = activeEmail;
       }
     }
 

@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DOPA AI - Resource Finder</title>
   <link rel="stylesheet" href="style.css" />
+  
+  <script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "auth.html";
+    }
+  </script>
 </head>
 <body>
 
@@ -17,6 +23,22 @@
       <li><a href="planner.html">Study Planner</a></li>
       <li><a href="resources.html">Resources</a></li>
       <li><a href="youtube.html">YouTube Study</a></li>
+      
+      <li class="profile-container" id="userProfileComponent" style="display: none;">
+        <div class="profile-avatar" onclick="toggleProfileDropdown(event)">
+          <span id="userInitial">U</span>
+        </div>
+        <div class="profile-dropdown" id="profileDropdown">
+          <div class="dropdown-header">
+            <p class="user-display-name" id="dropdownName">Student Name</p>
+            <p class="user-display-email" id="dropdownEmail">student@dopaai.com</p>
+          </div>
+          <hr class="dropdown-divider">
+          <a href="#" class="logout-btn" onclick="handleLogout(event)">
+            <span>🚪</span> Log Out
+          </a>
+        </div>
+      </li>
     </ul>
   </nav>
 
@@ -46,5 +68,65 @@
   </footer>
 
   <script src="resources.js"></script>
+
+  <script>
+    // Run initialization scripts once structural resources finish parsing
+    document.addEventListener("DOMContentLoaded", () => {
+      initNavbarProfile();
+    });
+
+    // Extract storage session indicators and build active user menu
+    function initNavbarProfile() {
+      const profileComponent = document.getElementById("userProfileComponent");
+      if (profileComponent) {
+        profileComponent.style.display = "inline-block";
+
+        const activeEmail = localStorage.getItem("savedEmail") || "student@dopaai.com";
+        let activeName = "Student";
+
+        const rawData = localStorage.getItem(`user_${activeEmail.toLowerCase()}`);
+        if (rawData) {
+          try {
+            const parsed = JSON.parse(rawData);
+            activeName = parsed.name || "Student";
+          } catch (e) {
+            console.error("Failed to parse metadata", e);
+          }
+        }
+
+        const initialText = document.getElementById("userInitial");
+        const nameLabel = document.getElementById("dropdownName");
+        const emailLabel = document.getElementById("dropdownEmail");
+
+        if (initialText) initialText.innerText = activeName.charAt(0).toUpperCase();
+        if (nameLabel) nameLabel.innerText = activeName;
+        if (emailLabel) emailLabel.innerText = activeEmail;
+      }
+    }
+
+    // Dropdown layer controls
+    function toggleProfileDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById("profileDropdown");
+      if (dropdown) dropdown.classList.toggle("show");
+    }
+
+    window.addEventListener("click", () => {
+      const dropdown = document.getElementById("profileDropdown");
+      if (dropdown && dropdown.classList.contains("show")) {
+        dropdown.classList.remove("show");
+      }
+    });
+
+    // Clear active status parameters on confirmation
+    function handleLogout(event) {
+      event.preventDefault();
+      const userConfirm = confirm("Are you sure you want to log out of DOPA AI?");
+      if (userConfirm) {
+        localStorage.removeItem("isLoggedIn");
+        window.location.href = "index.html";
+      }
+    }
+  </script>
 </body>
 </html>

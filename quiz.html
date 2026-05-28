@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DOPA AI - Quiz Generator</title>
   <link rel="stylesheet" href="style.css" />
+  
+  <script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "auth.html";
+    }
+  </script>
 </head>
 <body>
 
@@ -92,11 +98,6 @@
   <script src="quiz.js"></script>
 
   <script>
-    // SECURITY GUARD ROUTER: Kick out any unauthenticated local traffic loops
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-      window.location.href = "auth.html";
-    }
-
     // Initialize layout setup modules as soon as resources settle
     document.addEventListener("DOMContentLoaded", () => {
       initNavbarProfile();
@@ -108,23 +109,16 @@
       if (profileComponent) {
         profileComponent.style.display = "inline-block";
 
-        let activeEmail = "";
+        const activeEmail = localStorage.getItem("savedEmail") || "student@dopaai.com";
         let activeName = "Student";
 
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key.startsWith("user_")) {
-            activeEmail = key.replace("user_", "");
-            const rawData = localStorage.getItem(key);
-            if (rawData) {
-              try {
-                const parsed = JSON.parse(rawData);
-                activeName = parsed.name || "Student";
-              } catch (e) {
-                console.error("Profile parsing error log context triggered: ", e);
-              }
-            }
-            break;
+        const rawData = localStorage.getItem(`user_${activeEmail.toLowerCase()}`);
+        if (rawData) {
+          try {
+            const parsed = JSON.parse(rawData);
+            activeName = parsed.name || "Student";
+          } catch (e) {
+            console.error("Profile parsing error log context triggered: ", e);
           }
         }
 
@@ -132,9 +126,9 @@
         const nameLabel = document.getElementById("dropdownName");
         const emailLabel = document.getElementById("dropdownEmail");
 
-        if (initialText) initialText.innerText = activeName.charAt(0);
+        if (initialText) initialText.innerText = activeName.charAt(0).toUpperCase();
         if (nameLabel) nameLabel.innerText = activeName;
-        if (emailLabel) emailLabel.innerText = activeEmail || "student@dopaai.com";
+        if (emailLabel) emailLabel.innerText = activeEmail;
       }
     }
 

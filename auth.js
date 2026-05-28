@@ -1,4 +1,4 @@
-// SMART ROUTING: If user is already logged in, redirect them immediately to Doubt Solver
+// SMART ROUTING: If user is already logged in, redirect them immediately to your landing hub
 if (localStorage.getItem("isLoggedIn") === "true") {
   window.location.href = "doubt.html";
 }
@@ -159,11 +159,32 @@ function toggleResetFieldsVisibility() {
 function handleAuth(e) {
   e.preventDefault();
   
+  // Standard Email Regex evaluation pattern string structural gate
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
   if (currentMode === "signup") {
     const email = document.getElementById("authEmail").value.trim().toLowerCase();
     const password = document.getElementById("authPassword").value;
     const name = document.getElementById("authName").value.trim();
+    
     if (!name) { alert("Please fill in your name!"); return; }
+    
+    // Catch malformed rubbish data submissions immediately
+    if (!emailPattern.test(email)) {
+      alert("Please enter a valid structured email address (e.g. name@gmail.com)!");
+      return;
+    }
+
+    if (password.length < 4) {
+      alert("Security rule: Password must be at least 4 characters long!");
+      return;
+    }
+
+    // CHECK FOR EXISTING RECORD: Block user from signing up an email that already exists
+    if (localStorage.getItem(`user_${email}`)) {
+      alert("An account with this email already exists on this browser! Please switch to Log In mode.");
+      return;
+    }
 
     localStorage.setItem(`user_${email}`, JSON.stringify({ name: name, password: password }));
     
@@ -177,6 +198,12 @@ function handleAuth(e) {
   } else if (currentMode === "login") {
     const email = document.getElementById("authEmail").value.trim().toLowerCase();
     const password = document.getElementById("authPassword").value;
+    
+    if (!emailPattern.test(email)) {
+      alert("Please enter a valid email format!");
+      return;
+    }
+
     const savedUser = localStorage.getItem(`user_${email}`);
     
     if (!savedUser) {
@@ -198,6 +225,12 @@ function handleAuth(e) {
 
   } else if (currentMode === "reset_email") {
     const email = document.getElementById("authEmail").value.trim().toLowerCase();
+    
+    if (!emailPattern.test(email)) {
+      alert("Please enter a valid email format!");
+      return;
+    }
+
     const savedUser = localStorage.getItem(`user_${email}`);
     
     if (!savedUser) {
@@ -215,6 +248,11 @@ function handleAuth(e) {
     
     if (!newPass || !confirmPass) {
       alert("Please fill in both fields!");
+      return;
+    }
+
+    if (newPass.length < 4) {
+      alert("Password must be at least 4 characters long.");
       return;
     }
     
